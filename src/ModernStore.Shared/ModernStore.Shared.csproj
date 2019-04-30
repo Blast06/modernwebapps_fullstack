@@ -8,8 +8,4 @@
     <PackageReference Include="FluentValidator" Version="2.0.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ModernStore.Shared\ModernStore.Shared.csproj" />
-  </ItemGroup>
-
 </Project>
