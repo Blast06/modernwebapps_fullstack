@@ -3,7 +3,7 @@ using ModernStore.Domain.ValueObjects;
 using ModernStore.Shared.Entities;
 using System;
 
-namespace ModernStore.Domain
+namespace ModernStore.Domain.Entities
 {
     public class Customer : Entity
     {
