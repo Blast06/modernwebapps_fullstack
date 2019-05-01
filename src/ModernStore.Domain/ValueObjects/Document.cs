@@ -10,7 +10,7 @@ namespace ModernStore.Domain.ValueObjects
             Number = number;
 
             if (!Validate(number))
-                AddNotification("Document", "CPF inválido");
+                AddNotification("Document", "Invalid Document");
         }
         public string Number { get; private set; }
 

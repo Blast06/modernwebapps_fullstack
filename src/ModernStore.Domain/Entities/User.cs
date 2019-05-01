@@ -29,7 +29,7 @@ namespace ModernStore.Domain.Entities
             if (Username == username && Password == EncryptPassword(password))
                 return true;
 
-            AddNotification("User", "Usuário ou senha inválidos");
+            AddNotification("User", "User or PassWord invalid");
             return false;
         }
 
