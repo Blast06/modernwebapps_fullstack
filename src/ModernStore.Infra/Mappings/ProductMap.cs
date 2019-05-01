@@ -1,18 +1,19 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ModernStore.Domain.Entities;
 
 namespace ModernStore.Infra.Mappings
 {
-    public class ProductMap : EntityTypeConfiguration<Product>
+    public class ProductMap
     {
-        public ProductMap()
+        public ProductMap(EntityTypeBuilder<Product> entityBuilder)
         {
-            ToTable("Product");
-            HasKey(x => x.Id);
-            Property(x => x.Image).IsRequired().HasMaxLength(1024);
-            Property(x => x.Price);
-            Property(x => x.QuantityOnHand);
-            Property(x => x.Title).IsRequired().HasMaxLength(80);
+            entityBuilder.ToTable("Product");
+            entityBuilder.HasKey(x => x.Id);
+            entityBuilder.Property(x => x.Image).IsRequired().HasMaxLength(1024);
+            entityBuilder.Property(x => x.Price);
+            entityBuilder.Property(x => x.QuantityOnHand);
+            entityBuilder.Property(x => x.Title).IsRequired().HasMaxLength(80);
         }
     }
 }

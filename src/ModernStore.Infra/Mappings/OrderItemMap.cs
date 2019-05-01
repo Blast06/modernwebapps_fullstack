@@ -1,17 +1,18 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ModernStore.Domain.Entities;
 
 namespace ModernStore.Infra.Mappings
 {
-    public class OrderItemMap : EntityTypeConfiguration<OrderItem>
+    public class OrderItemMap
     {
-        public OrderItemMap()
+        public OrderItemMap(EntityTypeBuilder<OrderItem> entityBuilder)
         {
-            ToTable("OrderItem");
-            HasKey(x => x.Id);
-            Property(x => x.Price).HasColumnType("money");
-            Property(x => x.Quantity);
-            HasRequired(x => x.Product);            
+            entityBuilder.ToTable("OrderItem");
+            entityBuilder.HasKey(x => x.Id);
+            entityBuilder.Property(x => x.Price).HasColumnType("money");
+            entityBuilder.Property(x => x.Quantity);
+            entityBuilder.HasOne(x => x.Product);            
         }
     }
 }

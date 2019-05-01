@@ -1,29 +1,28 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 using ModernStore.Domain.Entities;
 using ModernStore.Infra.Mappings;
-using ModernStore.Shared;
 
 namespace ModernStore.Infra.Contexts
 {
     public class ModernStoreDataContext : DbContext
     {
-        public ModernStoreDataContext() : base(Settings.ConnectionString)
+        public ModernStoreDataContext(DbContextOptions<ModernStoreDataContext> options) : base(options)
         {
-            Configuration.LazyLoadingEnabled = false;
-            Configuration.ProxyCreationEnabled = false;
+
         }
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new CustomerMap());
-            modelBuilder.Configurations.Add(new OrderItemMap());
-            modelBuilder.Configurations.Add(new OrderMap());
-            modelBuilder.Configurations.Add(new ProductMap());
-            modelBuilder.Configurations.Add(new UserMap());
+            base.OnModelCreating(modelBuilder);
+            new CustomerMap(modelBuilder.Entity<Customer>());
+            new ProductMap(modelBuilder.Entity<Product>());
+            new UserMap(modelBuilder.Entity<User>());
+            new OrderMap(modelBuilder.Entity<Order>());
+            new OrderItemMap(modelBuilder.Entity<OrderItem>());
         }
     }
 }
