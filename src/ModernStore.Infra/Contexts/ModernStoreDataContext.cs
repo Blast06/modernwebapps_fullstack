@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ModernStore.Domain.Entities;
+using ModernStore.Shared.Entities;
 
 namespace ModernStore.Infra.Contexts
 {
@@ -51,6 +52,7 @@ namespace ModernStore.Infra.Contexts
             builder.Entity<Customer>().Ignore(i => i.Name);
             builder.Entity<Customer>().Ignore(i => i.Email);
             builder.Entity<Customer>().Ignore(i => i.Document);
+            builder.Entity<Entity>().Ignore(i => i.Notifications);
             #endregion            
         }
         #endregion
@@ -70,6 +72,7 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.UpdatedBy);
                 etd.Property(c => c.CreatedIn);
                 etd.Property(c => c.UpdatedIn);
+                etd.Ignore(c => c.Notifications);
             });
         }
 
@@ -80,16 +83,20 @@ namespace ModernStore.Infra.Contexts
                 etd.ToTable("Customer");
                 etd.HasKey(c => c.Id).HasName("Id");
                 //etd.Property(c => c.Id).HasColumnName("Id").ValueGeneratedOnAdd();
-                etd.Property(c => c.BirthDate);
-                etd.Property(c => c.Name.FirstName).HasColumnName("FirstName").HasMaxLength(60);
-                etd.Property(c => c.Name.LastName).HasColumnName("LastName").HasMaxLength(60);
-                etd.Property(c => c.Document.Number).HasColumnName("Number").HasMaxLength(20);
-                etd.Property(c => c.Email.EmailAddress).HasColumnName("EmailAddress").HasMaxLength(160);
-                etd.Property(c => c.User).IsRequired();
+                etd.Property(c => c.BirthDate);                
+                //etd.Property(c => c.Name.FirstName).HasColumnName("FirstName").HasMaxLength(60);
+                //etd.Property(c => c.Name.LastName).HasColumnName("LastName").HasMaxLength(60);
+                //etd.Property(c => c.Document.Number).HasColumnName("Number").HasMaxLength(20);
+                //etd.Property(c => c.Email.EmailAddress).HasColumnName("EmailAddress").HasMaxLength(160);
+                //etd.Property(c => c.User).IsRequired();
                 etd.Property(c => c.CreatedBy);
                 etd.Property(c => c.UpdatedBy);
                 etd.Property(c => c.CreatedIn);
-                etd.Property(c => c.UpdatedIn);
+                etd.Property(c => c.UpdatedIn);                
+                builder.Entity<Customer>().OwnsOne(c => c.Name);                
+                builder.Entity<Customer>().OwnsOne(c => c.Document);
+                builder.Entity<Customer>().OwnsOne(c => c.Email);
+                etd.Ignore(c => c.Notifications);
             });
         }
 
@@ -107,6 +114,7 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.UpdatedBy);
                 etd.Property(c => c.CreatedIn);
                 etd.Property(c => c.UpdatedIn);
+                etd.Ignore(c => c.Notifications);
             });
         }
 
@@ -125,6 +133,7 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.UpdatedBy);
                 etd.Property(c => c.CreatedIn);
                 etd.Property(c => c.UpdatedIn);
+                etd.Ignore(c => c.Notifications);
             });
         }
 
@@ -136,11 +145,12 @@ namespace ModernStore.Infra.Contexts
                 etd.HasKey(c => c.Id).HasName("Id");
                 etd.Property(c => c.Price);
                 etd.Property(c => c.Quantity);
-                etd.Property(c => c.Product);                
+                //etd.Property(c => c.Product);                
                 etd.Property(c => c.CreatedBy);
                 etd.Property(c => c.UpdatedBy);
                 etd.Property(c => c.CreatedIn);
                 etd.Property(c => c.UpdatedIn);
+                etd.Ignore(c => c.Notifications);
             });
         }
         #endregion
