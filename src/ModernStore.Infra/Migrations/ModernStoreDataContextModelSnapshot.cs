@@ -56,16 +56,11 @@ namespace ModernStore.Infra.Migrations
 
                     b.Property<Guid?>("CustomerId");
 
-                    b.Property<decimal>("DeliveryFee")
-                        .HasColumnType("money");
+                    b.Property<decimal>("DeliveryFee");
 
-                    b.Property<decimal>("Discount")
-                        .HasColumnType("money");
+                    b.Property<decimal>("Discount");
 
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .IsFixedLength(true)
-                        .HasMaxLength(8);
+                    b.Property<string>("Number");
 
                     b.Property<int>("Status");
 
@@ -91,8 +86,7 @@ namespace ModernStore.Infra.Migrations
 
                     b.Property<Guid?>("OrderId");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("money");
+                    b.Property<decimal>("Price");
 
                     b.Property<Guid?>("ProductId");
 
@@ -120,17 +114,13 @@ namespace ModernStore.Infra.Migrations
 
                     b.Property<DateTime>("CreatedIn");
 
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasMaxLength(1024);
+                    b.Property<string>("Image");
 
                     b.Property<decimal>("Price");
 
                     b.Property<int>("QuantityOnHand");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(80);
+                    b.Property<string>("Title");
 
                     b.Property<Guid>("UpdatedBy");
 
@@ -152,18 +142,13 @@ namespace ModernStore.Infra.Migrations
 
                     b.Property<DateTime>("CreatedIn");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .IsFixedLength(true)
-                        .HasMaxLength(32);
+                    b.Property<string>("Password");
 
                     b.Property<Guid>("UpdatedBy");
 
                     b.Property<DateTime>("UpdatedIn");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(20);
+                    b.Property<string>("Username");
 
                     b.HasKey("Id");
 

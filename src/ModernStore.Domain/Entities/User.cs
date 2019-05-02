@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using FluentValidator;
 using FluentValidator.Validation;
 using ModernStore.Shared.Entities;
@@ -22,7 +23,7 @@ namespace ModernStore.Domain.Entities
 
         public string Username { get; private set; }
         public string Password { get; private set; }
-        public bool Active { get; private set; }
+        public bool Active { get; private set; }        
 
         public bool Authenticate(string username, string password)
         {

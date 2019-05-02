@@ -26,7 +26,7 @@ namespace ModernStore.Domain.Entities
         public DateTime? BirthDate { get; private set; }
         public Email Email { get; private set; }
         public Document Document { get; private set; }
-        public User User { get; private set; }
+        public User User { get; private set; }        
 
         public void Update(Name name, DateTime birthDate)
         {
