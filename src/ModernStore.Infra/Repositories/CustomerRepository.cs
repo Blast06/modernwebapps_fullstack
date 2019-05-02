@@ -71,11 +71,11 @@ namespace ModernStore.Infra.Repositories
             //    .FirstOrDefault(x => x.Username == username);
 
             var query = "SELECT * FROM [GetCustomerInfoView] WHERE [Active]=1 AND [Username]=@username";
-            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Analysis"].ConnectionString))
+            using (var conn = new SqlConnection(Settings.ConnectionString))
             {
                 conn.Open();
                 return conn
-                    .Query<GetCustomerCommandResult>(query, 
+                    .Query<GetCustomerCommandResult>(query,
                     new { username = username })
                     .FirstOrDefault();
             }

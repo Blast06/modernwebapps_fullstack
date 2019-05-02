@@ -9,6 +9,7 @@ using ModernStore.Domain.Entities;
 using ModernStore.Domain.Repositories;
 using ModernStore.Infra.Contexts;
 using ModernStore.Shared;
+using static Dapper.SqlMapper;
 
 namespace ModernStore.Infra.Repositories
 {

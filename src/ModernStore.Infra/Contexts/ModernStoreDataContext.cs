@@ -6,14 +6,15 @@ namespace ModernStore.Infra.Contexts
 {
     public class ModernStoreDataContext : DbContext
     {
-        public ModernStoreDataContext(DbContextOptions<ModernStoreDataContext> options) : base(options)
+        public ModernStoreDataContext()
         {
 
         }
 
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Product> Products { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Server=(LocalDB)\\MSSQLLocalDB;Database=ModernStore;Trusted_Connection=True;");
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,5 +25,9 @@ namespace ModernStore.Infra.Contexts
             new OrderMap(modelBuilder.Entity<Order>());
             new OrderItemMap(modelBuilder.Entity<OrderItem>());
         }
+
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Product> Products { get; set; }        
     }
 }
