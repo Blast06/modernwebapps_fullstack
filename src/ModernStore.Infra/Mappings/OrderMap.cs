@@ -18,6 +18,12 @@ namespace ModernStore.Infra.Mappings
 
             entityBuilder.HasMany(x => x.Items);
             entityBuilder.HasOne(x => x.Customer);
+            entityBuilder.Property(x => x.Id).IsRequired();
+            entityBuilder.Property(x => x.CreatedBy).IsRequired();
+            entityBuilder.Property(x => x.UpdatedBy).IsRequired();
+            entityBuilder.Property(x => x.CreatedIn).IsRequired();
+            entityBuilder.Property(x => x.UpdatedIn).IsRequired();
+            //entityBuilder.Ignore(x => x.Notifications);
         }
     }
 }

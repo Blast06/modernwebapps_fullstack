@@ -14,6 +14,12 @@ namespace ModernStore.Infra.Mappings
             entityBuilder.Property(x => x.Price);
             entityBuilder.Property(x => x.QuantityOnHand);
             entityBuilder.Property(x => x.Title).IsRequired().HasMaxLength(80);
+            entityBuilder.Property(x => x.Id).IsRequired();
+            entityBuilder.Property(x => x.CreatedBy).IsRequired();
+            entityBuilder.Property(x => x.UpdatedBy).IsRequired();
+            entityBuilder.Property(x => x.CreatedIn).IsRequired();
+            entityBuilder.Property(x => x.UpdatedIn).IsRequired();
+            //entityBuilder.Ignore(x => x.Notifications);
         }
     }
 }

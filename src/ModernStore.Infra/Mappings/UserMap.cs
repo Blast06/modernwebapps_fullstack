@@ -13,6 +13,12 @@ namespace ModernStore.Infra.Mappings
             entityBuilder.Property(x => x.Username).IsRequired().HasMaxLength(20);
             entityBuilder.Property(x => x.Password).IsRequired().HasMaxLength(32).IsFixedLength();
             entityBuilder.Property(x => x.Active);
+            entityBuilder.Property(x => x.Id).IsRequired();
+            entityBuilder.Property(x => x.CreatedBy).IsRequired();
+            entityBuilder.Property(x => x.UpdatedBy).IsRequired();
+            entityBuilder.Property(x => x.CreatedIn).IsRequired();
+            entityBuilder.Property(x => x.UpdatedIn).IsRequired();
+            //entityBuilder.Ignore(x => x.Notifications);            
         }
     }
 }
