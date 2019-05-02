@@ -4,9 +4,9 @@ using ModernStore.Domain.Entities;
 
 namespace ModernStore.Infra.Mappings
 {
-    public class OrderMap
+    public class OrderMap : IEntityTypeConfiguration<Order>
     {
-        public OrderMap(EntityTypeBuilder<Order> entityBuilder)
+        public void Configure(EntityTypeBuilder<Order> entityBuilder)
         {
             entityBuilder.ToTable("Order");
             entityBuilder.HasKey(x => x.Id);
@@ -18,7 +18,6 @@ namespace ModernStore.Infra.Mappings
 
             entityBuilder.HasMany(x => x.Items);
             entityBuilder.HasOne(x => x.Customer);
-            entityBuilder.Property(x => x.Id).IsRequired();
             entityBuilder.Property(x => x.CreatedBy).IsRequired();
             entityBuilder.Property(x => x.UpdatedBy).IsRequired();
             entityBuilder.Property(x => x.CreatedIn).IsRequired();

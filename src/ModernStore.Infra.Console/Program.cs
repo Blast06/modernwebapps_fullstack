@@ -11,7 +11,7 @@ namespace ModernStore.Infra.Console
         {
             //without DI, just for tests purpose
             ModernStoreDataContext _context = new ModernStoreDataContext();
-            var data = _context.Orders.ToList();
+            var data = _context.Order.ToList();
         }
     }
 }

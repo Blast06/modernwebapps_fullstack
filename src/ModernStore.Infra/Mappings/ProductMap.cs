@@ -4,22 +4,21 @@ using ModernStore.Domain.Entities;
 
 namespace ModernStore.Infra.Mappings
 {
-    public class ProductMap
+    public class ProductMap : IEntityTypeConfiguration<Product>
     {
-        public ProductMap(EntityTypeBuilder<Product> entityBuilder)
+        public void Configure(EntityTypeBuilder<Product> builder)
         {
-            entityBuilder.ToTable("Product");
-            entityBuilder.HasKey(x => x.Id);
-            entityBuilder.Property(x => x.Image).IsRequired().HasMaxLength(1024);
-            entityBuilder.Property(x => x.Price);
-            entityBuilder.Property(x => x.QuantityOnHand);
-            entityBuilder.Property(x => x.Title).IsRequired().HasMaxLength(80);
-            entityBuilder.Property(x => x.Id).IsRequired();
-            entityBuilder.Property(x => x.CreatedBy).IsRequired();
-            entityBuilder.Property(x => x.UpdatedBy).IsRequired();
-            entityBuilder.Property(x => x.CreatedIn).IsRequired();
-            entityBuilder.Property(x => x.UpdatedIn).IsRequired();
-            //entityBuilder.Ignore(x => x.Notifications);
+            builder.ToTable("Product");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Image).IsRequired().HasMaxLength(1024);
+            builder.Property(x => x.Price);
+            builder.Property(x => x.QuantityOnHand);
+            builder.Property(x => x.Title).IsRequired().HasMaxLength(80);
+            builder.Property(x => x.CreatedBy).IsRequired();
+            builder.Property(x => x.UpdatedBy).IsRequired();
+            builder.Property(x => x.CreatedIn).IsRequired();
+            builder.Property(x => x.UpdatedIn).IsRequired();
+            //builder.Ignore(x => x.Notifications);
         }
     }
 }

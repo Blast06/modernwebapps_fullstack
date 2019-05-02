@@ -25,7 +25,7 @@ namespace ModernStore.Infra.Repositories
         public Product Get(Guid id)
         {
             return _context
-                .Products
+                .Product
                 .AsNoTracking()
                 .FirstOrDefault(x=>x.Id == id);
         }

@@ -17,32 +17,48 @@ namespace ModernStore.Infra.Contexts
             optionsBuilder.UseSqlServer(Settings.ConnectionString);
         }
 
+        public DbSet<User> User { get; set; }
+        public DbSet<Customer> Customer { get; set; }        
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderItem> OrderItem { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);            
-            new CustomerMap(modelBuilder.Entity<Customer>());
-            new ProductMap(modelBuilder.Entity<Product>());
-            new UserMap(modelBuilder.Entity<User>());
-            new OrderMap(modelBuilder.Entity<Order>());
-            new OrderItemMap(modelBuilder.Entity<OrderItem>());
+        {            
+            modelBuilder.Entity<User>().Ignore(c => c.Notifications);
+            modelBuilder.Entity<Customer>().Ignore(c => c.Notifications);
+            modelBuilder.Entity<Product>().Ignore(c => c.Notifications);
+            modelBuilder.Entity<Order>().Ignore(c => c.Notifications);
+            modelBuilder.Entity<OrderItem>().Ignore(c => c.Notifications);
+            modelBuilder.Entity<Customer>().Ignore(c => c.Email);
+            modelBuilder.Entity<Customer>().Ignore(c => c.Document);
+            modelBuilder.Entity<Customer>().Ignore(c => c.Name);
 
-            modelBuilder.Entity<Customer>().Ignore(d => d.Notifications);
-            modelBuilder.Entity<Product>().Ignore(d => d.Notifications);
-            modelBuilder.Entity<User>().Ignore(d => d.Notifications);
-            modelBuilder.Entity<Order>().Ignore(d => d.Notifications);
-            modelBuilder.Entity<OrderItem>().Ignore(d => d.Notifications);
-            modelBuilder.Entity<Document>().Ignore(d => d.Notifications);
-            modelBuilder.Entity<Email>().Ignore(d => d.Notifications);
-            modelBuilder.Entity<Name>().Ignore(d => d.Notifications);
+            modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.ApplyConfiguration(new CustomerMap());
+            modelBuilder.ApplyConfiguration(new ProductMap());
+            modelBuilder.ApplyConfiguration(new OrderMap());
+            modelBuilder.ApplyConfiguration(new OrderItemMap());
 
-            //this tables without PK need to get a Primary Key, if don't, EF Migration will get problem...
-            modelBuilder.Entity<Document>().HasKey(t => new { t.Number });
-            modelBuilder.Entity<Email>().HasKey(t => new { t.EmailAddress });
-            modelBuilder.Entity<Name>().HasKey(t => new { t.LastName }); 
+            //modelBuilder.Ignore<Customer>();
+            //modelBuilder.Ignore<Document>();
+            //modelBuilder.Ignore<Email>();
+            //modelBuilder.Ignore<Name>();
+            //modelBuilder.Ignore<Order>();
+            //modelBuilder.Ignore<OrderItem>();
+
+            //modelBuilder.ApplyConfiguration(new UserMap());
+            //modelBuilder.ApplyConfiguration(new ProductMap());
+
+            //new CustomerMap(modelBuilder.Entity<Customer>());
+            //new ProductMap(modelBuilder.Entity<Product>());
+            //new UserMap(modelBuilder.Entity<User>());
+            //new OrderMap(modelBuilder.Entity<Order>());
+            //new OrderItemMap(modelBuilder.Entity<OrderItem>());
+
+            base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Product> Products { get; set; }        
+        
     }
 }

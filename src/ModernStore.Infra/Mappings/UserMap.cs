@@ -4,21 +4,20 @@ using ModernStore.Domain.Entities;
 
 namespace ModernStore.Infra.Mappings
 {
-    public class UserMap
+    public class UserMap : IEntityTypeConfiguration<User>
     {
-        public UserMap(EntityTypeBuilder<User> entityBuilder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
-            entityBuilder.ToTable("User");
-            entityBuilder.HasKey(x => x.Id);
-            entityBuilder.Property(x => x.Username).IsRequired().HasMaxLength(20);
-            entityBuilder.Property(x => x.Password).IsRequired().HasMaxLength(32).IsFixedLength();
-            entityBuilder.Property(x => x.Active);
-            entityBuilder.Property(x => x.Id).IsRequired();
-            entityBuilder.Property(x => x.CreatedBy).IsRequired();
-            entityBuilder.Property(x => x.UpdatedBy).IsRequired();
-            entityBuilder.Property(x => x.CreatedIn).IsRequired();
-            entityBuilder.Property(x => x.UpdatedIn).IsRequired();
-            //entityBuilder.Ignore(x => x.Notifications);            
+            builder.ToTable("User");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Username).IsRequired().HasMaxLength(20);
+            builder.Property(x => x.Password).IsRequired().HasMaxLength(32).IsFixedLength();
+            builder.Property(x => x.Active);
+            builder.Property(x => x.CreatedBy).IsRequired();
+            builder.Property(x => x.UpdatedBy).IsRequired();
+            builder.Property(x => x.CreatedIn).IsRequired();
+            builder.Property(x => x.UpdatedIn).IsRequired();
+            //builder.Ignore(x => x.Notifications);
         }
     }
 }

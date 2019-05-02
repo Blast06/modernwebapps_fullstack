@@ -30,12 +30,6 @@ namespace ModernStore.Infra.Migrations
 
                     b.Property<DateTime>("CreatedIn");
 
-                    b.Property<string>("DocumentNumber");
-
-                    b.Property<string>("EmailAddress");
-
-                    b.Property<string>("NameLastName");
-
                     b.Property<Guid>("UpdatedBy");
 
                     b.Property<DateTime>("UpdatedIn");
@@ -43,12 +37,6 @@ namespace ModernStore.Infra.Migrations
                     b.Property<Guid?>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DocumentNumber");
-
-                    b.HasIndex("EmailAddress");
-
-                    b.HasIndex("NameLastName");
 
                     b.HasIndex("UserId");
 
@@ -182,52 +170,8 @@ namespace ModernStore.Infra.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("ModernStore.Domain.ValueObjects.Document", b =>
-                {
-                    b.Property<string>("Number")
-                        .ValueGeneratedOnAdd();
-
-                    b.HasKey("Number");
-
-                    b.ToTable("Document");
-                });
-
-            modelBuilder.Entity("ModernStore.Domain.ValueObjects.Email", b =>
-                {
-                    b.Property<string>("EmailAddress")
-                        .ValueGeneratedOnAdd();
-
-                    b.HasKey("EmailAddress");
-
-                    b.ToTable("Email");
-                });
-
-            modelBuilder.Entity("ModernStore.Domain.ValueObjects.Name", b =>
-                {
-                    b.Property<string>("LastName")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("FirstName");
-
-                    b.HasKey("LastName");
-
-                    b.ToTable("Name");
-                });
-
             modelBuilder.Entity("ModernStore.Domain.Entities.Customer", b =>
                 {
-                    b.HasOne("ModernStore.Domain.ValueObjects.Document", "Document")
-                        .WithMany()
-                        .HasForeignKey("DocumentNumber");
-
-                    b.HasOne("ModernStore.Domain.ValueObjects.Email", "Email")
-                        .WithMany()
-                        .HasForeignKey("EmailAddress");
-
-                    b.HasOne("ModernStore.Domain.ValueObjects.Name", "Name")
-                        .WithMany()
-                        .HasForeignKey("NameLastName");
-
                     b.HasOne("ModernStore.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");

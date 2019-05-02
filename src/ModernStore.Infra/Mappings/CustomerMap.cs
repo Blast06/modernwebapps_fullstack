@@ -4,27 +4,27 @@ using ModernStore.Domain.Entities;
 
 namespace ModernStore.Infra.Mappings
 {
-    public class CustomerMap
+    public class CustomerMap : IEntityTypeConfiguration<Customer>
     {
-        public CustomerMap(EntityTypeBuilder<Customer> entityBuilder)
+        public void Configure(EntityTypeBuilder<Customer> builder)
         {
-            entityBuilder.ToTable("Customer");
-            entityBuilder.HasKey(x => x.Id);
-            entityBuilder.Property(x => x.BirthDate);
+            builder.ToTable("Customer");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.BirthDate);
             //entityBuilder.Property(x => x.Document.Number).IsRequired().HasMaxLength(20);
             //entityBuilder.Property(x => x.Email.EmailAddress).IsRequired().HasMaxLength(160);
             //entityBuilder.Property(x => x.Name.FirstName).IsRequired().HasMaxLength(60);
             //entityBuilder.Property(x => x.Name.LastName).IsRequired().HasMaxLength(60);
-            entityBuilder.HasOne(x => x.User);
-            entityBuilder.Property(x => x.Id).IsRequired();
-            entityBuilder.Property(x => x.CreatedBy).IsRequired();
-            entityBuilder.Property(x => x.UpdatedBy).IsRequired();
-            entityBuilder.Property(x => x.CreatedIn).IsRequired();
-            entityBuilder.Property(x => x.UpdatedIn).IsRequired();
-            //entityBuilder.Ignore(x => x.Notifications);
-            //entityBuilder.Ignore(x => x.User.Notifications);
-            //entityBuilder.Ignore(x => x.Document.Notifications);
-            //entityBuilder.Ignore(x => x.Email.Notifications);
+
+            builder.HasOne(x => x.User);
+            builder.Property(x => x.CreatedBy).IsRequired();
+            builder.Property(x => x.UpdatedBy).IsRequired();
+            builder.Property(x => x.CreatedIn).IsRequired();
+            builder.Property(x => x.UpdatedIn).IsRequired();
+            //builder.Ignore(x => x.Notifications);
+            //builder.Ignore(x => x.Name);
+            //builder.Ignore(x => x.Document);
+            //builder.Ignore(x => x.Email);
         }
     }
 }
