@@ -14,7 +14,7 @@ namespace ModernStore.Infra.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(LocalDB)\\MSSQLLocalDB;Database=ModernStore;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(Settings.ConnectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
