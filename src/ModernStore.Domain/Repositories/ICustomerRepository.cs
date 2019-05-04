@@ -6,7 +6,7 @@ namespace ModernStore.Domain.Repositories
 {
     public interface ICustomerRepository
     {
-        Customer Get(Guid id);
+        Customer Get(int id);
         Customer GetByUsername(string username);
         GetCustomerCommandResult Get(string username);
         void Save(Customer customer);

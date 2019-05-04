@@ -59,7 +59,7 @@ namespace ModernStore.Domain.Commands.Handlers
                 string.Format(EmailTemplates.WelcomeEmailBody, customer.Name));
 
             // Step 6: Return the Result
-            return new RegisterCustomerCommandResult(customer.Id, customer.Name.ToString());
+            return new RegisterCustomerCommandResult(customer.CustomerId, customer.Name.ToString());
         }
     }
 }

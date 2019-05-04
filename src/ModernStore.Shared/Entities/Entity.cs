@@ -7,17 +7,13 @@ namespace ModernStore.Shared.Entities
     {
         protected Entity()
         {
-            Id = new Guid();
-            CreatedBy = Id;
             CreatedIn = DateTime.Now;
-            UpdatedBy = Id;
             UpdatedIn = DateTime.Now;
         }
 
-        public Guid Id { get; private set; }
-        public DateTime CreatedIn { get; private set; }
-        public Guid CreatedBy { get; private set; }
-        public DateTime UpdatedIn { get; private set; }
-        public Guid UpdatedBy { get; private set; }
+        public DateTime CreatedIn { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime UpdatedIn { get; set; }
+        public int UpdatedBy { get; set; }
     }
 }

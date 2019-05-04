@@ -14,16 +14,17 @@ namespace ModernStore.Domain.Entities
         {
             Username = username;
             Password = EncryptPassword(password);
-            Active = true;
+            UserId = 0;
 
             AddNotifications(new ValidationContract()
                 .AreEquals(Password, EncryptPassword(confirmPassword), "Password", "PassWords don't Match")                
             );
         }
 
+        public int UserId { get; private set; }
         public string Username { get; private set; }
         public string Password { get; private set; }
-        public bool Active { get; private set; }        
+        public bool Active { get; private set; }   
 
         public bool Authenticate(string username, string password)
         {

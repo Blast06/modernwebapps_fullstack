@@ -9,13 +9,13 @@ namespace ModernStore.Domain.Commands.Results
         {
             
         }
-        public RegisterCustomerCommandResult(Guid id, string name)
+        public RegisterCustomerCommandResult(int id, string name)
         {
             Id = id;
             Name = name;
         }
 
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

@@ -16,16 +16,19 @@ namespace ModernStore.Domain.Entities
             Email = email;
             Document = document;
             User = user;
+            CustomerId = 0;
 
             AddNotifications(name.Notifications);
             AddNotifications(email.Notifications);
             AddNotifications(Document.Notifications);
         }
 
+        public int CustomerId { get; set; }
         public Name Name { get; private set; }
         public DateTime? BirthDate { get; private set; }
         public Email Email { get; private set; }
         public Document Document { get; private set; }
+        public int UserId { get; set; }
         public User User { get; private set; }        
 
         public void Update(Name name, DateTime birthDate)

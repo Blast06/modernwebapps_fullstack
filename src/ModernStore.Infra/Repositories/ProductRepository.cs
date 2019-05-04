@@ -22,12 +22,12 @@ namespace ModernStore.Infra.Repositories
             _context = context;
         }
 
-        public Product Get(Guid id)
+        public Product Get(int id)
         {
             return _context
                 .Product
                 .AsNoTracking()
-                .FirstOrDefault(x=>x.Id == id);
+                .FirstOrDefault(x=>x.ProductId == id);
         }
 
         public IEnumerable<GetProductListCommandResult> Get()

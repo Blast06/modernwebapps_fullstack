@@ -21,12 +21,12 @@ namespace ModernStore.Infra.Repositories
             _context = context;
         }
 
-        public Customer Get(Guid id)
+        public Customer Get(int id)
         {
             return _context
                 .Customer
                 .Include(x => x.User)
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefault(x => x.CustomerId == id);
             
         }
 

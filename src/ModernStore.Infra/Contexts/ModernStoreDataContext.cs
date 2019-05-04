@@ -6,6 +6,18 @@ namespace ModernStore.Infra.Contexts
 {
     public class ModernStoreDataContext : DbContext
     {
+        #region Important Documentation
+        //This is not the BEST Model I love. Because i had to do some adapts, because EF in Core 2.2 don't recognize some things
+        //like EF6 in .Net 4.6 Does. So unfortunely i had to create aditional Configurators Methods and Keys on Models... say all the
+        //keys, relationship... worst than that, i had to tell EF to ignore Notifications because he's giving erros because class
+        //dont' have a PK (why the hell he is trying to create a table?). I had too problems with ValueObjects - a lot of problems...
+        //so i had follow this article: https://docs.microsoft.com/en-us/ef/core/modeling/relationships . If in Future EF Core
+        //accepts better DDD and SOLID architecture, i should Refactory some things here and Entities . Well (or hell?), who knows...
+
+        //RelationShip One to One: modelBuilder.Entity<Blog>().HasMany(b => b.Posts).WithOne();
+        //RelationShip One to N: modelBuilder.Entity<Post>().HasOne(p => p.Blog).WithMany(b => b.Posts);
+        #endregion
+
         #region Constructors DbSets
         public ModernStoreDataContext(DbContextOptions<ModernStoreDataContext> options) : base(options) { }
         public ModernStoreDataContext() { }
@@ -33,27 +45,7 @@ namespace ModernStore.Infra.Contexts
             ConfigUser(builder);
             ConfigProduct(builder);
             ConfigOrder(builder);
-            ConfigOrderItem(builder);
-
-            #region Keys
-            //builder.Entity<User>().HasKey(t => t.Id);
-            //builder.Entity<Customer>().HasKey(t => t.Id);
-            //builder.Entity<Product>().HasKey(t => t.Id);
-            //builder.Entity<Order>().HasKey(t => t.Id);
-            //builder.Entity<OrderItem>().HasKey(t => t.Id);
-            #endregion
-
-            #region Ignored Fields
-            //builder.Entity<User>().Ignore(i => i.Notifications);
-            //builder.Entity<Product>().Ignore(i => i.Notifications);
-            //builder.Entity<Order>().Ignore(i => i.Notifications);
-            //builder.Entity<OrderItem>().Ignore(i => i.Notifications);
-            //builder.Entity<Customer>().Ignore(i => i.Notifications);
-            //builder.Entity<Customer>().Ignore(i => i.Name);
-            //builder.Entity<Customer>().Ignore(i => i.Email);
-            //builder.Entity<Customer>().Ignore(i => i.Document);
-            //builder.Entity<Entity>().Ignore(i => i.Notifications);
-            #endregion            
+            ConfigOrderItem(builder);                      
         }
         #endregion
 
@@ -63,15 +55,14 @@ namespace ModernStore.Infra.Contexts
             builder.Entity<User>(etd =>
             {
                 etd.ToTable("User");
-                etd.HasKey(c => c.Id).HasName("Id");
-                //etd.Property(c => c.Id).HasColumnName("Id").ValueGeneratedOnAdd();
-                etd.Property(c => c.Active);
-                etd.Property(c => c.Username).HasMaxLength(20);
-                etd.Property(c => c.Password).HasMaxLength(32);
-                etd.Property(c => c.CreatedBy);
-                etd.Property(c => c.UpdatedBy);
-                etd.Property(c => c.CreatedIn);
-                etd.Property(c => c.UpdatedIn);
+                etd.HasKey(c => c.UserId);
+                etd.Property(c => c.Username).IsRequired().HasMaxLength(20);
+                etd.Property(c => c.Password).IsRequired().HasMaxLength(32);
+                etd.Property(c => c.Active).IsRequired();
+                etd.Property(c => c.CreatedBy).IsRequired();
+                etd.Property(c => c.UpdatedBy).IsRequired();
+                etd.Property(c => c.CreatedIn).IsRequired();
+                etd.Property(c => c.UpdatedIn).IsRequired();
                 etd.Ignore(c => c.Notifications);
             });
         }
@@ -81,23 +72,18 @@ namespace ModernStore.Infra.Contexts
             builder.Entity<Customer>(etd=>
             {
                 etd.ToTable("Customer");
-                etd.HasKey(c => c.Id).HasName("Id");
-                //etd.Property(c => c.Id).HasColumnName("Id").ValueGeneratedOnAdd();
-                etd.Property(c => c.BirthDate);                
-                //etd.Property(c => c.Name.FirstName).HasColumnName("FirstName").HasMaxLength(60);
-                //etd.Property(c => c.Name.LastName).HasColumnName("LastName").HasMaxLength(60);
-                //etd.Property(c => c.Document.Number).HasColumnName("Number").HasMaxLength(20);
-                //etd.Property(c => c.Email.EmailAddress).HasColumnName("EmailAddress").HasMaxLength(160);
-                //etd.Property(c => c.User).IsRequired();
-                etd.Property(c => c.CreatedBy);
-                etd.Property(c => c.UpdatedBy);
-                etd.Property(c => c.CreatedIn);
-                etd.Property(c => c.UpdatedIn);                
-                //here i had to (1) show all my valueobject and (2) says to EF ignore the Notifications inside it
+                etd.HasKey(c => c.CustomerId);
+                etd.Property(c => c.BirthDate);
+                etd.Property(c => c.CreatedBy).IsRequired();
+                etd.Property(c => c.UpdatedBy).IsRequired();
+                etd.Property(c => c.CreatedIn).IsRequired();
+                etd.Property(c => c.UpdatedIn).IsRequired();
+                //here i had to (1) show all my valueobject and (2) says to EF ignore the Notifications inside it                
                 builder.Entity<Customer>().OwnsOne(c => c.Name).Ignore(c => c.Notifications);
                 builder.Entity<Customer>().OwnsOne(c => c.Document).Ignore(c => c.Notifications);
                 builder.Entity<Customer>().OwnsOne(c => c.Email).Ignore(c => c.Notifications);
                 builder.Entity<Customer>().OwnsOne(c => c.User).Ignore(c => c.Notifications);
+                builder.Entity<Customer>().HasOne(p => p.User).WithOne().HasForeignKey("UserId"); //A Customer has one User
                 etd.Ignore(c => c.Notifications);                
             });
         }
@@ -107,15 +93,15 @@ namespace ModernStore.Infra.Contexts
             builder.Entity<Product>(etd =>
             {
                 etd.ToTable("Product");
-                etd.HasKey(c => c.Id).HasName("Id");
+                etd.HasKey(c => c.ProductId);
                 etd.Property(c => c.Image).IsRequired().HasMaxLength(1024);
-                etd.Property(c => c.Price);
-                etd.Property(c => c.QuantityOnHand);
-                etd.Property(c => c.Title).IsRequired().HasMaxLength(80);
-                etd.Property(c => c.CreatedBy);
-                etd.Property(c => c.UpdatedBy);
-                etd.Property(c => c.CreatedIn);
-                etd.Property(c => c.UpdatedIn);
+                etd.Property(c => c.Price).IsRequired();
+                etd.Property(c => c.QuantityOnHand).IsRequired();
+                etd.Property(c => c.Title).IsRequired().HasMaxLength(160);
+                etd.Property(c => c.CreatedBy).IsRequired();
+                etd.Property(c => c.UpdatedBy).IsRequired();
+                etd.Property(c => c.CreatedIn).IsRequired();
+                etd.Property(c => c.UpdatedIn).IsRequired();
                 etd.Ignore(c => c.Notifications);
             });
         }
@@ -125,17 +111,17 @@ namespace ModernStore.Infra.Contexts
             builder.Entity<Order>(etd =>
             {
                 etd.ToTable("Order");
-                etd.HasKey(c => c.Id).HasName("Id");
-                etd.Property(c => c.CreateDate);
-                etd.Property(c => c.DeliveryFee);
-                etd.Property(c => c.Discount);
+                etd.HasKey(c => c.OrderId);                
+                etd.Property(c => c.DeliveryFee).IsRequired();
+                etd.Property(c => c.Discount).IsRequired();
                 etd.Property(c => c.Number).IsRequired().HasMaxLength(8);
-                etd.Property(c => c.Status);
-                etd.Property(c => c.CreatedBy);
-                etd.Property(c => c.UpdatedBy);
-                etd.Property(c => c.CreatedIn);
-                etd.Property(c => c.UpdatedIn);
+                etd.Property(c => c.Status).IsRequired();
+                etd.Property(c => c.CreatedBy).IsRequired();
+                etd.Property(c => c.UpdatedBy).IsRequired();
+                etd.Property(c => c.CreatedIn).IsRequired();
+                etd.Property(c => c.UpdatedIn).IsRequired();
                 builder.Entity<Order>().OwnsOne(c => c.Customer).Ignore(c => c.Notifications);
+                builder.Entity<Order>().HasOne(p => p.Customer).WithOne().HasForeignKey("CustomerId"); //A Order Belong to a Customer
                 etd.Ignore(c => c.Notifications);
             });
         }
@@ -145,15 +131,17 @@ namespace ModernStore.Infra.Contexts
             builder.Entity<OrderItem>(etd =>
             {
                 etd.ToTable("OrderItem");
-                etd.HasKey(c => c.Id).HasName("Id");
-                etd.Property(c => c.Price);
-                etd.Property(c => c.Quantity);
-                //etd.Property(c => c.Product);                
-                etd.Property(c => c.CreatedBy);
-                etd.Property(c => c.UpdatedBy);
-                etd.Property(c => c.CreatedIn);
-                etd.Property(c => c.UpdatedIn);
+                etd.HasKey(c => c.OrderItemId);
+                etd.Property(c => c.Price).IsRequired();
+                etd.Property(c => c.Quantity).IsRequired();
+                etd.Property(c => c.CreatedBy).IsRequired();
+                etd.Property(c => c.UpdatedBy).IsRequired();
+                etd.Property(c => c.CreatedIn).IsRequired();
+                etd.Property(c => c.UpdatedIn).IsRequired();
                 builder.Entity<OrderItem>().OwnsOne(c => c.Product).Ignore(c => c.Notifications);
+                builder.Entity<OrderItem>().OwnsOne(c => c.Order).Ignore(c => c.Notifications);
+                builder.Entity<OrderItem>().HasOne(p => p.Product).WithOne().HasForeignKey("ProductId"); //A OrderItem belongs to a Product
+                builder.Entity<OrderItem>().HasOne(p => p.Order).WithOne().HasForeignKey("OrderId"); //A OrderItem belongs to a Order
                 etd.Ignore(c => c.Notifications);
             });
         }

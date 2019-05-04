@@ -7,9 +7,13 @@ namespace ModernStore.Domain.Entities
     {
         protected OrderItem() { }
 
-        public OrderItem(Product product, int quantity)
+        public OrderItem(Product product, Order order, int quantity)
         {
             Product = product;
+            ProductId = product.ProductId;
+            Order = order;
+            OrderId = order.OrderId;
+            OrderItemId = 0;
             Quantity = quantity;
             Price = Product.Price;
 
@@ -21,7 +25,12 @@ namespace ModernStore.Domain.Entities
             Product.DecreaseQuantity(quantity);
         }
         
+        public int OrderItemId { get; private set; }
+        public int ProductId { get; private set; }
         public Product Product { get; private set; }
+        public int OrderId { get; private set; }
+        public Order Order { get; private set; }
+
         public int Quantity { get; private set; }
         public decimal Price { get; private set; }
 

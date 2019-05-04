@@ -24,7 +24,7 @@ namespace ModernStore.Domain.Commands.Handlers
         public ICommandResult Handle(RegisterOrderCommand command)
         {
             // Instancia o cliente (Lendo do repositorio)
-            var customer = _customerRepository.Get(command.Customer);
+            var customer = _customerRepository.Get(command.CustomerId);
 
             // Gera um novo pedido
             var order = new Order(customer, command.DeliveryFee, command.Discount);
@@ -32,8 +32,8 @@ namespace ModernStore.Domain.Commands.Handlers
             // Adiciona os itens no pedido
             foreach (var item in command.Items)
             {
-                var product = _productRepository.Get(item.Product);
-                order.AddItem(new OrderItem(product, item.Quantity));
+                var product = _productRepository.Get(item.ProductId);
+                order.AddItem(new OrderItem(product, order, item.Quantity));
             }
 
             // Adiciona as notificações do Pedido no Handler

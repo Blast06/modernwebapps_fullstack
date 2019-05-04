@@ -1,8 +1,13 @@
 # Modern Web Apps - Full Stack (Based on Balta Course 22h):
 Modern WebApp FullStack - .NET Core Backend + Angular UI Web + Ionic Mobile APP. 
 
-This is a Customer + Products + Sales APP. To run you will need: .NET Core Runtime 2.2.4.
-It was Made using Visual Studio 2017 Community (15.9.11) + .Net Core SDK 2.2.106.
+This is a Customer + Products + Sales APP. To run you will need:
+(1) Install .NET Core Runtime (2.2.4) + .Net Core SDK 2.2.106 (Last for VS2017).
+(2) Open Project and Restore NugetPackages. After - Rebuild all Solution.
+(3) Set "ModernStore.Infra.Console" as StartUp Project. Open Package-Manager Console.
+(4) Select Default-Project as "ModernStore.Infra", enter it's folder (cd) and run "update-database".
+That's all folks!
+
 ------------------------------------------------------------------------------------------------------------
 Note 30/04/2019 - This is UnderDev - not ready! Check out "PassaiaStoreClassic" repo instead.
 
