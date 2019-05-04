@@ -57,7 +57,7 @@ namespace ModernStore.Infra.Contexts
         }
         #endregion
 
-        #region Configura das Tabelas
+        #region Configure Tables
         private void ConfigUser(ModelBuilder builder)
         {
             builder.Entity<User>(etd =>
@@ -93,9 +93,11 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.UpdatedBy);
                 etd.Property(c => c.CreatedIn);
                 etd.Property(c => c.UpdatedIn);                
+                //here i had to (1) show all my valueobject and (2) says to EF ignore the Notifications inside it
                 builder.Entity<Customer>().OwnsOne(c => c.Name).Ignore(c => c.Notifications);
                 builder.Entity<Customer>().OwnsOne(c => c.Document).Ignore(c => c.Notifications);
                 builder.Entity<Customer>().OwnsOne(c => c.Email).Ignore(c => c.Notifications);
+                builder.Entity<Customer>().OwnsOne(c => c.User).Ignore(c => c.Notifications);
                 etd.Ignore(c => c.Notifications);                
             });
         }
@@ -133,6 +135,7 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.UpdatedBy);
                 etd.Property(c => c.CreatedIn);
                 etd.Property(c => c.UpdatedIn);
+                builder.Entity<Order>().OwnsOne(c => c.Customer).Ignore(c => c.Notifications);
                 etd.Ignore(c => c.Notifications);
             });
         }
@@ -150,6 +153,7 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.UpdatedBy);
                 etd.Property(c => c.CreatedIn);
                 etd.Property(c => c.UpdatedIn);
+                builder.Entity<OrderItem>().OwnsOne(c => c.Product).Ignore(c => c.Notifications);
                 etd.Ignore(c => c.Notifications);
             });
         }
