@@ -44,15 +44,15 @@ namespace ModernStore.Infra.Contexts
             #endregion
 
             #region Ignored Fields
-            builder.Entity<User>().Ignore(i => i.Notifications);
-            builder.Entity<Product>().Ignore(i => i.Notifications);
-            builder.Entity<Order>().Ignore(i => i.Notifications);
-            builder.Entity<OrderItem>().Ignore(i => i.Notifications);
-            builder.Entity<Customer>().Ignore(i => i.Notifications);
-            builder.Entity<Customer>().Ignore(i => i.Name);
-            builder.Entity<Customer>().Ignore(i => i.Email);
-            builder.Entity<Customer>().Ignore(i => i.Document);
-            builder.Entity<Entity>().Ignore(i => i.Notifications);
+            //builder.Entity<User>().Ignore(i => i.Notifications);
+            //builder.Entity<Product>().Ignore(i => i.Notifications);
+            //builder.Entity<Order>().Ignore(i => i.Notifications);
+            //builder.Entity<OrderItem>().Ignore(i => i.Notifications);
+            //builder.Entity<Customer>().Ignore(i => i.Notifications);
+            //builder.Entity<Customer>().Ignore(i => i.Name);
+            //builder.Entity<Customer>().Ignore(i => i.Email);
+            //builder.Entity<Customer>().Ignore(i => i.Document);
+            //builder.Entity<Entity>().Ignore(i => i.Notifications);
             #endregion            
         }
         #endregion
@@ -93,10 +93,10 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.UpdatedBy);
                 etd.Property(c => c.CreatedIn);
                 etd.Property(c => c.UpdatedIn);                
-                builder.Entity<Customer>().OwnsOne(c => c.Name);                
-                builder.Entity<Customer>().OwnsOne(c => c.Document);
-                builder.Entity<Customer>().OwnsOne(c => c.Email);
-                etd.Ignore(c => c.Notifications);
+                builder.Entity<Customer>().OwnsOne(c => c.Name).Ignore(c => c.Notifications);
+                builder.Entity<Customer>().OwnsOne(c => c.Document).Ignore(c => c.Notifications);
+                builder.Entity<Customer>().OwnsOne(c => c.Email).Ignore(c => c.Notifications);
+                etd.Ignore(c => c.Notifications);                
             });
         }
 

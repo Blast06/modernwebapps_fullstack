@@ -1,13 +1,13 @@
 # Modern Web Apps - Full Stack (Based on Balta Course 22h):
-Modern WebApp FullStack - .NET Core Backend + Angular UI Web + Ionic Mobile APP.
+Modern WebApp FullStack - .NET Core Backend + Angular UI Web + Ionic Mobile APP. 
 
-This is a Customer + Products + Sales APP.
+This is a Customer + Products + Sales APP. To run you will need: .NET Core Runtime 2.2.4.
+It was Made using Visual Studio 2017 Community (15.9.11) + .Net Core SDK 2.2.106.
 ------------------------------------------------------------------------------------------------------------
 Note 30/04/2019 - This is UnderDev - not ready! Check out "PassaiaStoreClassic" repo instead.
 
 Requisites: VS Community + VS Code + NodeJS (npm)
 Yeoman (npm install -g yo + npm install -g generator-aspnet)
-
 
 ------------------------------------------------------------------------------------------------------------
 Note: Document of Customer is a "CPF" - the Brazilian Registration Card. It requires a Validation method to
@@ -22,4 +22,9 @@ Anyway, i'm a cool guy, so i will leave some samples for you to use it here:
 
 Note: If you do a POST with an invalid (or already in use) Document, the data will not be saved to database.
 Instead of that - i will get back a JSON with Validation info. Try it, that's cool.
+------------------------------------------------------------------------------------------------------------
+
+The Data-Access was Developed using EntityFramework Core + Dapper.
+Dapper to Get Data (Selects) because it's more performatic.
+
 ------------------------------------------------------------------------------------------------------------
