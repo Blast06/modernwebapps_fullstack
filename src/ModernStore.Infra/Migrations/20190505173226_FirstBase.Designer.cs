@@ -10,7 +10,7 @@ using ModernStore.Infra.Contexts;
 namespace ModernStore.Infra.Migrations
 {
     [DbContext(typeof(ModernStoreDataContext))]
-    [Migration("20190505172415_FirstBase")]
+    [Migration("20190505173226_FirstBase")]
     partial class FirstBase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
