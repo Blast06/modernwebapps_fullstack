@@ -40,9 +40,10 @@ namespace ModernStore.Domain.Entities
         public ICollection<OrderItem> Items => _items.ToArray();
         public decimal DeliveryFee { get; private set; }
         public decimal Discount { get; private set; }
+        //public List<OrderItem> OrderItems { get; private set; } //a order contains N OrderItems
 
         public decimal SubTotal() => Items.Sum(x => x.Total());
-        public decimal Total() => SubTotal() + DeliveryFee - Discount;
+        public decimal Total() => SubTotal() + DeliveryFee - Discount;        
 
         public void AddItem(OrderItem item)
         {

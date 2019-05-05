@@ -64,6 +64,7 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.CreatedIn).IsRequired();
                 etd.Property(c => c.UpdatedIn).IsRequired();
                 etd.Ignore(c => c.Notifications);
+                etd.Ignore(c => c.Customer);
             });
         }
 
@@ -77,14 +78,19 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.CreatedBy).IsRequired();
                 etd.Property(c => c.UpdatedBy).IsRequired();
                 etd.Property(c => c.CreatedIn).IsRequired();
-                etd.Property(c => c.UpdatedIn).IsRequired();
+                etd.Property(c => c.UpdatedIn).IsRequired();                
                 //here i had to (1) show all my valueobject and (2) says to EF ignore the Notifications inside it                
-                builder.Entity<Customer>().OwnsOne(c => c.Name).Ignore(c => c.Notifications);
+                builder.Entity<Customer>().OwnsOne(c => c.Name).Ignore(p => p.Notifications);
+                builder.Entity<Customer>().OwnsOne(c => c.Name).Property(c => c.FirstName).HasColumnName("FirstName").HasMaxLength(60);
+                builder.Entity<Customer>().OwnsOne(c => c.Name).Property(c => c.LastName).HasColumnName("LastName").HasMaxLength(60);
                 builder.Entity<Customer>().OwnsOne(c => c.Document).Ignore(c => c.Notifications);
+                builder.Entity<Customer>().OwnsOne(c => c.Document).Property(c => c.Number).HasColumnName("DocumentNumber").HasMaxLength(20);
                 builder.Entity<Customer>().OwnsOne(c => c.Email).Ignore(c => c.Notifications);
+                builder.Entity<Customer>().OwnsOne(c => c.Email).Property(c => c.EmailAddress).HasColumnName("EmailAddress").HasMaxLength(60);
                 builder.Entity<Customer>().OwnsOne(c => c.User).Ignore(c => c.Notifications);
-                builder.Entity<Customer>().HasOne(p => p.User).WithOne().HasForeignKey("UserId"); //A Customer has one User
-                etd.Ignore(c => c.Notifications);                
+                builder.Entity<Customer>().HasOne(a => a.User).WithOne(b => b.Customer).HasForeignKey<Customer>(b => b.UserId); //A Customer has one User
+                etd.Ignore(c => c.Notifications);
+                etd.Ignore(c => c.Order); //created just because EF needs it to create the FK... aff!
             });
         }
 
@@ -103,6 +109,7 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.CreatedIn).IsRequired();
                 etd.Property(c => c.UpdatedIn).IsRequired();
                 etd.Ignore(c => c.Notifications);
+                etd.Ignore(c => c.OrderItems);
             });
         }
 
@@ -121,8 +128,8 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.CreatedIn).IsRequired();
                 etd.Property(c => c.UpdatedIn).IsRequired();
                 builder.Entity<Order>().OwnsOne(c => c.Customer).Ignore(c => c.Notifications);
-                builder.Entity<Order>().HasOne(p => p.Customer).WithOne().HasForeignKey("CustomerId"); //A Order Belong to a Customer
-                etd.Ignore(c => c.Notifications);
+                builder.Entity<Order>().HasOne(p => p.Customer).WithOne(b => b.Order).HasForeignKey<Order>(b => b.CustomerId); //A Order Belong to a Customer                etd.Ignore(c => c.Notifications);
+                etd.Ignore(c => c.Items);               
             });
         }
 
@@ -140,8 +147,10 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.UpdatedIn).IsRequired();
                 builder.Entity<OrderItem>().OwnsOne(c => c.Product).Ignore(c => c.Notifications);
                 builder.Entity<OrderItem>().OwnsOne(c => c.Order).Ignore(c => c.Notifications);
-                builder.Entity<OrderItem>().HasOne(p => p.Product).WithOne().HasForeignKey("ProductId"); //A OrderItem belongs to a Product
-                builder.Entity<OrderItem>().HasOne(p => p.Order).WithOne().HasForeignKey("OrderId"); //A OrderItem belongs to a Order
+
+                //A Product will be in N OrderItems and A Order will have N OrderItems
+                builder.Entity<OrderItem>().HasOne(p => p.Product).WithMany(p => p.OrderItems).HasForeignKey(p => p.ProductId);
+                builder.Entity<OrderItem>().HasOne(p => p.Order).WithMany(p => p.Items).HasForeignKey(p => p.OrderId);
                 etd.Ignore(c => c.Notifications);
             });
         }

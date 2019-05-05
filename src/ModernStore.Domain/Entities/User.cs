@@ -25,6 +25,7 @@ namespace ModernStore.Domain.Entities
         public string Username { get; private set; }
         public string Password { get; private set; }
         public bool Active { get; private set; }   
+        public Customer Customer { get; private set; }
 
         public bool Authenticate(string username, string password)
         {

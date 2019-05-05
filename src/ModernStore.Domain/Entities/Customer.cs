@@ -30,6 +30,7 @@ namespace ModernStore.Domain.Entities
         public Document Document { get; private set; }
         public int UserId { get; set; }
         public User User { get; private set; }        
+        public Order Order { get; private set; }
 
         public void Update(Name name, DateTime birthDate)
         {

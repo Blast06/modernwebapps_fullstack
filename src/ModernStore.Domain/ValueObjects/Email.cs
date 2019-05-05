@@ -11,7 +11,8 @@ namespace ModernStore.Domain.ValueObjects
             EmailAddress = emailAddress;
 
             AddNotifications(new ValidationContract()
-                .IsEmail("EmailAddress", "EmailAddress", "Should inform EmailAddress in Correct Format")                
+                .IsEmail("EmailAddress", "EmailAddress", "Should inform EmailAddress in Correct Format")
+                .HasMaxLen(EmailAddress, 60, "EmailAddress", "EmailAddress should be max 120")
             );            
         }
 

@@ -1,5 +1,6 @@
 ﻿using FluentValidator.Validation;
 using ModernStore.Shared.Entities;
+using System.Collections.Generic;
 
 namespace ModernStore.Domain.Entities
 {
@@ -18,7 +19,7 @@ namespace ModernStore.Domain.Entities
             AddNotifications(new ValidationContract()
                 .IsNotNull(Title, "Title", "Should inform Title")
                 .HasMinLen(Title, 3, "Title", "Title caracters min 3")
-                .HasMaxLen(Title, 160, "Title", "Title caracters max 160")                
+                .HasMaxLen(Title, 160, "Title", "Title caracters max 160")
             );
         }
 
@@ -27,6 +28,7 @@ namespace ModernStore.Domain.Entities
         public decimal Price { get; private set; }
         public string Image { get; private set; }
         public int QuantityOnHand { get; private set; }
+        public List<OrderItem> OrderItems { get; private set; } //a product can be on N OrderItems
 
         public void DecreaseQuantity(int quantity) => QuantityOnHand -= quantity;
     }
