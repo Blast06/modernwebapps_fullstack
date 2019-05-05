@@ -28,7 +28,7 @@ namespace ModernStore.Domain.Entities
         public decimal Price { get; private set; }
         public string Image { get; private set; }
         public int QuantityOnHand { get; private set; }
-        public List<OrderItem> OrderItems { get; private set; } //a product can be on N OrderItems
+        public List<OrderItem> OrderItemsFromDB { get; private set; } //because EF Relationship...  
 
         public void DecreaseQuantity(int quantity) => QuantityOnHand -= quantity;
     }

@@ -17,7 +17,6 @@ namespace ModernStore.Domain.Entities
         public Order(Customer customer, decimal deliveryFee, decimal discount)
         {
             Customer = customer;
-            CustomerId = customer.CustomerId;
             OrderId = 0;
             Number = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
             Status = EOrderStatus.Created;            
@@ -32,15 +31,13 @@ namespace ModernStore.Domain.Entities
             );
         }
 
-        public int OrderId { get; private set; }
-        public int CustomerId { get; private set; }
-        public Customer Customer { get; private set; }
+        public int OrderId { get; private set; }        
         public string Number { get; private set; }
         public EOrderStatus Status { get; private set; }
-        public ICollection<OrderItem> Items => _items.ToArray();
+        public ICollection<OrderItem> Items => _items.ToArray(); //a order contains N OrderItems
         public decimal DeliveryFee { get; private set; }
         public decimal Discount { get; private set; }
-        //public List<OrderItem> OrderItems { get; private set; } //a order contains N OrderItems
+        public Customer Customer { get; private set; }
 
         public decimal SubTotal() => Items.Sum(x => x.Total());
         public decimal Total() => SubTotal() + DeliveryFee - Discount;        

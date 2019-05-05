@@ -2,6 +2,7 @@
 using ModernStore.Domain.ValueObjects;
 using ModernStore.Shared.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace ModernStore.Domain.Entities
 {
@@ -28,9 +29,7 @@ namespace ModernStore.Domain.Entities
         public DateTime? BirthDate { get; private set; }
         public Email Email { get; private set; }
         public Document Document { get; private set; }
-        public int UserId { get; set; }
         public User User { get; private set; }        
-        public Order Order { get; private set; }
 
         public void Update(Name name, DateTime birthDate)
         {

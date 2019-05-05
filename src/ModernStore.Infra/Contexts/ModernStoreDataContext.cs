@@ -39,13 +39,12 @@ namespace ModernStore.Infra.Contexts
         {
             base.OnModelCreating(builder);
             builder.ForSqlServerUseIdentityColumns();
-            builder.HasDefaultSchema("ModernStore");
-
+            builder.HasDefaultSchema("ModernStore");            
             ConfigCustomer(builder);
             ConfigUser(builder);
             ConfigProduct(builder);
             ConfigOrder(builder);
-            ConfigOrderItem(builder);                      
+            ConfigOrderItem(builder);            
         }
         #endregion
 
@@ -88,9 +87,10 @@ namespace ModernStore.Infra.Contexts
                 builder.Entity<Customer>().OwnsOne(c => c.Email).Ignore(c => c.Notifications);
                 builder.Entity<Customer>().OwnsOne(c => c.Email).Property(c => c.EmailAddress).HasColumnName("EmailAddress").HasMaxLength(60);
                 builder.Entity<Customer>().OwnsOne(c => c.User).Ignore(c => c.Notifications);
-                builder.Entity<Customer>().HasOne(a => a.User).WithOne(b => b.Customer).HasForeignKey<Customer>(b => b.UserId); //A Customer has one User
-                etd.Ignore(c => c.Notifications);
-                etd.Ignore(c => c.Order); //created just because EF needs it to create the FK... aff!
+
+                builder.Entity<Customer>().Property<int>("UserId"); //name of the FK that will be generated on DB
+                builder.Entity<Customer>().HasOne(a => a.User).WithOne(b => b.Customer).HasForeignKey<Customer>("UserId"); //A Customer has one User
+                etd.Ignore(c => c.Notifications);                
             });
         }
 
@@ -109,7 +109,6 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.CreatedIn).IsRequired();
                 etd.Property(c => c.UpdatedIn).IsRequired();
                 etd.Ignore(c => c.Notifications);
-                etd.Ignore(c => c.OrderItems);
             });
         }
 
@@ -128,8 +127,10 @@ namespace ModernStore.Infra.Contexts
                 etd.Property(c => c.CreatedIn).IsRequired();
                 etd.Property(c => c.UpdatedIn).IsRequired();
                 builder.Entity<Order>().OwnsOne(c => c.Customer).Ignore(c => c.Notifications);
-                builder.Entity<Order>().HasOne(p => p.Customer).WithOne(b => b.Order).HasForeignKey<Order>(b => b.CustomerId); //A Order Belong to a Customer                etd.Ignore(c => c.Notifications);
-                etd.Ignore(c => c.Items);               
+
+                builder.Entity<Order>().Property<int>("CustomerId"); //name of the FK that will be generated on DB
+                builder.Entity<Order>().HasOne(a => a.Customer).WithOne().HasForeignKey<Order>("CustomerId"); //A Customer has one User
+                etd.Ignore(c => c.Notifications);
             });
         }
 
@@ -149,8 +150,11 @@ namespace ModernStore.Infra.Contexts
                 builder.Entity<OrderItem>().OwnsOne(c => c.Order).Ignore(c => c.Notifications);
 
                 //A Product will be in N OrderItems and A Order will have N OrderItems
-                builder.Entity<OrderItem>().HasOne(p => p.Product).WithMany(p => p.OrderItems).HasForeignKey(p => p.ProductId);
-                builder.Entity<OrderItem>().HasOne(p => p.Order).WithMany(p => p.Items).HasForeignKey(p => p.OrderId);
+                builder.Entity<OrderItem>().Property<int>("ProductId"); //name of the FK that will be generated on DB
+                builder.Entity<OrderItem>().HasOne(p => p.Product).WithMany(p => p.OrderItemsFromDB).HasForeignKey("ProductId");
+                builder.Entity<OrderItem>().Property<int>("OrderId"); //name of the FK that will be generated on DB
+                builder.Entity<OrderItem>().HasOne(p => p.Order).WithMany(b => b.Items).HasForeignKey("OrderId");
+                
                 etd.Ignore(c => c.Notifications);
             });
         }
