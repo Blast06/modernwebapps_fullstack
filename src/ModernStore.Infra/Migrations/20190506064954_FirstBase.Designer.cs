@@ -10,14 +10,13 @@ using ModernStore.Infra.Contexts;
 namespace ModernStore.Infra.Migrations
 {
     [DbContext(typeof(ModernStoreDataContext))]
-    [Migration("20190505173226_FirstBase")]
+    [Migration("20190506064954_FirstBase")]
     partial class FirstBase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("ModernStore")
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -169,7 +168,7 @@ namespace ModernStore.Infra.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("User","ModernStore");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("ModernStore.Domain.Entities.Customer", b =>
@@ -191,7 +190,7 @@ namespace ModernStore.Infra.Migrations
 
                             b1.HasKey("CustomerId");
 
-                            b1.ToTable("Customer","ModernStore");
+                            b1.ToTable("Customer");
 
                             b1.HasOne("ModernStore.Domain.Entities.Customer")
                                 .WithOne("Document")
@@ -211,7 +210,7 @@ namespace ModernStore.Infra.Migrations
 
                             b1.HasKey("CustomerId");
 
-                            b1.ToTable("Customer","ModernStore");
+                            b1.ToTable("Customer");
 
                             b1.HasOne("ModernStore.Domain.Entities.Customer")
                                 .WithOne("Email")
@@ -235,7 +234,7 @@ namespace ModernStore.Infra.Migrations
 
                             b1.HasKey("CustomerId");
 
-                            b1.ToTable("Customer","ModernStore");
+                            b1.ToTable("Customer");
 
                             b1.HasOne("ModernStore.Domain.Entities.Customer")
                                 .WithOne("Name")

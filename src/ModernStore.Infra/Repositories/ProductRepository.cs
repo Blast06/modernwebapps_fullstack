@@ -32,7 +32,7 @@ namespace ModernStore.Infra.Repositories
 
         public IEnumerable<GetProductListCommandResult> Get()
         {
-            var query = "SELECT [Id], [Title], [Price], [Image] FROM [Product]";
+            var query = "SELECT [ProductId], [Title], [Price], [Image] FROM [Product]";
             using (var conn = new SqlConnection(Settings.ConnectionString))
             {
                 conn.Open();

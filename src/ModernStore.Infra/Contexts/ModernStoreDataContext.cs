@@ -39,21 +39,12 @@ namespace ModernStore.Infra.Contexts
         {
             base.OnModelCreating(builder);
             builder.ForSqlServerUseIdentityColumns();
-            builder.HasDefaultSchema("ModernStore");            
+            //builder.HasDefaultSchema("ModernStore"); //to create alias
             ConfigCustomer(builder);
             ConfigUser(builder);
             ConfigProduct(builder);
             ConfigOrder(builder);
-            ConfigOrderItem(builder);
-
-            //I Had a View on DataBase (and it's creat here) to return Users in a Fast Way to Dapper...
-            //this.Database.ExecuteSqlCommand("Select Name = Cus.FirstName + ' ' + Cus.LastName, Cus.DocumentNumber, Cus.EmailAddress, " +
-            //"Usr.Username, Usr.Password, Usr.Active from ModernStore.Customer Cus Inner Join ModernStore.[User] Usr ON Cus.UserId = Usr.UserId"); 
-
-            //CREATE VIEW GetCustomerInfoView AS
-            //Select Name = Cus.FirstName + ' ' + Cus.LastName, Cus.DocumentNumber, Cus.EmailAddress,
-            //Usr.Username, Usr.Password, Usr.Active from ModernStore.Customer Cus Inner Join
-            //ModernStore.[User] Usr ON Cus.UserId = Usr.UserId
+            ConfigOrderItem(builder);            
         }
         #endregion
 

@@ -8,12 +8,8 @@ namespace ModernStore.Infra.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "ModernStore");
-
             migrationBuilder.CreateTable(
                 name: "Product",
-                schema: "ModernStore",
                 columns: table => new
                 {
                     ProductId = table.Column<int>(nullable: false)
@@ -34,7 +30,6 @@ namespace ModernStore.Infra.Migrations
 
             migrationBuilder.CreateTable(
                 name: "User",
-                schema: "ModernStore",
                 columns: table => new
                 {
                     UserId = table.Column<int>(nullable: false)
@@ -54,7 +49,6 @@ namespace ModernStore.Infra.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Customer",
-                schema: "ModernStore",
                 columns: table => new
                 {
                     CustomerId = table.Column<int>(nullable: false)
@@ -76,7 +70,6 @@ namespace ModernStore.Infra.Migrations
                     table.ForeignKey(
                         name: "FK_Customer_User_UserId",
                         column: x => x.UserId,
-                        principalSchema: "ModernStore",
                         principalTable: "User",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
@@ -84,7 +77,6 @@ namespace ModernStore.Infra.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Order",
-                schema: "ModernStore",
                 columns: table => new
                 {
                     OrderId = table.Column<int>(nullable: false)
@@ -105,7 +97,6 @@ namespace ModernStore.Infra.Migrations
                     table.ForeignKey(
                         name: "FK_Order_Customer_CustomerId",
                         column: x => x.CustomerId,
-                        principalSchema: "ModernStore",
                         principalTable: "Customer",
                         principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Cascade);
@@ -113,7 +104,6 @@ namespace ModernStore.Infra.Migrations
 
             migrationBuilder.CreateTable(
                 name: "OrderItem",
-                schema: "ModernStore",
                 columns: table => new
                 {
                     OrderItemId = table.Column<int>(nullable: false)
@@ -133,14 +123,12 @@ namespace ModernStore.Infra.Migrations
                     table.ForeignKey(
                         name: "FK_OrderItem_Order_OrderId",
                         column: x => x.OrderId,
-                        principalSchema: "ModernStore",
                         principalTable: "Order",
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_OrderItem_Product_ProductId",
                         column: x => x.ProductId,
-                        principalSchema: "ModernStore",
                         principalTable: "Product",
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
@@ -148,26 +136,22 @@ namespace ModernStore.Infra.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customer_UserId",
-                schema: "ModernStore",
                 table: "Customer",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Order_CustomerId",
-                schema: "ModernStore",
                 table: "Order",
                 column: "CustomerId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItem_OrderId",
-                schema: "ModernStore",
                 table: "OrderItem",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItem_ProductId",
-                schema: "ModernStore",
                 table: "OrderItem",
                 column: "ProductId");
         }
@@ -175,24 +159,19 @@ namespace ModernStore.Infra.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OrderItem",
-                schema: "ModernStore");
+                name: "OrderItem");
 
             migrationBuilder.DropTable(
-                name: "Order",
-                schema: "ModernStore");
+                name: "Order");
 
             migrationBuilder.DropTable(
-                name: "Product",
-                schema: "ModernStore");
+                name: "Product");
 
             migrationBuilder.DropTable(
-                name: "Customer",
-                schema: "ModernStore");
+                name: "Customer");
 
             migrationBuilder.DropTable(
-                name: "User",
-                schema: "ModernStore");
+                name: "User");
         }
     }
 }
