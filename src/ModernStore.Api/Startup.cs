@@ -1,7 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using ModernStore.Api.Security;
 using ModernStore.Domain.Commands.Handlers;
 using ModernStore.Domain.Repositories;
 using ModernStore.Domain.Services;
@@ -9,17 +16,76 @@ using ModernStore.Infra.Contexts;
 using ModernStore.Infra.Repositories;
 using ModernStore.Infra.Services;
 using ModernStore.Infra.Transactions;
+using ModernStore.Shared;
+using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace ModernStore.Api
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public IConfiguration Configuration { get; set; }
+        private const string ISSUER = "c1f18f15"; //here is the key to be used internaly with JWT. I can put
+        private const string AUDIENCE = "c6bfeb185015"; //anything here, doesn't matter. I can put "pera and
+        private const string SECRET_KEY = "c1f18f42-5727-4d15-b787-c6bbbb185015"; //"maça" instead of this.
+
+        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SECRET_KEY));
+
+        public Startup(IHostingEnvironment env)
+        {
+            var configurationBuilder = new ConfigurationBuilder()
+               .SetBasePath(env.ContentRootPath)
+               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+               .AddEnvironmentVariables();
+            Configuration = configurationBuilder.Build();
+        }
+
         public void ConfigureServices(IServiceCollection services)
-        {            
-            services.AddMvc();
+        {
+            services.AddMvc(config =>
+            {
+                //here i configure my policies: Blocking ALL API Access. If i want to allow some WebApi Method to be
+                //called without Authentication, i can use the Decorator [AllowAnonimous] to do it.
+                var policy = new AuthorizationPolicyBuilder()
+                                 .RequireAuthenticatedUser()
+                                 .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
             services.AddCors();
+
+            services.AddAuthorization(options =>
+            {
+                //here i define that i'll have to policies, for Users and Admins (this is just
+                //the NAMES, i'll define what they do/means after).
+                //options.AddPolicy("User", policy => policy.RequireClaim("ModernStore", "User"));
+                //options.AddPolicy("Admin", policy => policy.RequireClaim("ModernStore", "Admin"));
+                //i can have more complex policies, for example, get on DataBase if that user belongs to Admin Rules or something:
+
+                options.AddPolicy("User", policy => policy.RequireClaim("ModernStore", "User"));
+                options.AddPolicy("Admin", policy => policy.RequireClaim("ModernStore", "Admin"));
+            });
+
+            services.Configure<TokenOptions>(options =>
+            {
+                options.Issuer = ISSUER;
+                options.Audience = AUDIENCE;
+                options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
+            });
+
+
+            //This Solves the Legacy Code commented on Configure Method
+            //services.AddAuthorization(options =>
+            //{
+            //    options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+            //        .RequireAuthenticatedUser()
+            //        .Build();
+            //}
+            //);
+            //services.AddAuthentication(o =>
+            //{
+            //    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //});
 
             //difference between Scoped and Transient is that: when you start app (server), will be created just ONE instance
             //of "ModernStoreDataContext". The SAME instance will be passed always when someone asks for ModernStoreDataContext.
@@ -27,21 +93,52 @@ namespace ModernStore.Api
             //what's is the interface, and what's the implementation to it. So Scoped is SINGLETON and AddTransient is new object. 
             services.AddScoped<ModernStoreDataContext, ModernStoreDataContext>();
             services.AddTransient<IUow, Uow>();
+
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
+
             services.AddTransient<IEmailService, EmailService>();
+
             services.AddTransient<CustomerCommandHandler, CustomerCommandHandler>();
-            services.AddTransient<OrderCommandHandler, OrderCommandHandler>();            
+            services.AddTransient<OrderCommandHandler, OrderCommandHandler>();
+
+            //i had to ADD this Line because PostMan and AspNet Core are not in a mood...
+            services.AddMvc().AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            ////i had to add this line, because MVC is converting my DTOs to Lowercase, so instead of "UserName" it's taking "userName" (even if class is UserName).
+            services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            
+            //method to SWAGGER (OpenApi) works:
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1", new Info { Title = "ModernStore API", Version = "v1" });
+            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            //loggerFactory.AddConsole();
+
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = ISSUER,
+
+                ValidateAudience = true,
+                ValidAudience = AUDIENCE,
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = _signingKey,
+
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+
+                ClockSkew = TimeSpan.Zero
+            };
 
             app.UseCors(x =>
             {
@@ -49,12 +146,16 @@ namespace ModernStore.Api
                 x.AllowAnyMethod();
                 x.AllowAnyOrigin();
             });
-
             app.UseMvc();
 
-            app.Run(async (context) =>
+            Runtime.ConnectionString = Configuration.GetConnectionString("CnnStr");
+
+            app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FutureOfMedia - V1");
             });
         }
     }

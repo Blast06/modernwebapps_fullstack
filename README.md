@@ -33,3 +33,17 @@ The Data-Access was Developed using EntityFramework Core + Dapper.
 Dapper to Get Data (Selects) because it's more performatic.
 
 ------------------------------------------------------------------------------------------------------------
+
+Autenthication: oAuth. Order of execution:
+
+App => Request of Token.
+Each Request => Send Token => API.
+API Validate the Token => Return Result.
+
+JWT => Json Web Token
+
+There's to way of autenticate: (1) Roles (2) Policy and Claim.
+
+To install: Microsoft.AspNetCore.Authentication.JwtBearer
+(Note: If you want to build a Distributated-API and this API will generate auth to a lot of Systems, you can
+use something like Think Tank Identity Server).

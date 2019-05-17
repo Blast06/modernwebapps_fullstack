@@ -17,10 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ModernStore.Domain\ModernStore.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\ModernStore.Shared\ModernStore.Shared.csproj" />
   </ItemGroup>
 
 </Project>

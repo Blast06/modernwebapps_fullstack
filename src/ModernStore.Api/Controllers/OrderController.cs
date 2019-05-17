@@ -32,7 +32,7 @@ namespace ModernStore.Api.Controllers
         #endregion
 
         [HttpPost]
-        [Route("v1/customers")]
+        [Route("v1/orders")]
         public async Task<IActionResult> Post([FromBody]RegisterOrderCommand command)
         {
             var result = _handler.Handle(command);

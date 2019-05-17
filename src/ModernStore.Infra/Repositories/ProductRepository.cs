@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
@@ -33,7 +32,7 @@ namespace ModernStore.Infra.Repositories
         public IEnumerable<GetProductListCommandResult> Get()
         {
             var query = "SELECT [ProductId], [Title], [Price], [Image] FROM [Product]";
-            using (var conn = new SqlConnection(Settings.ConnectionString))
+            using (var conn = new SqlConnection(Runtime.ConnectionString))
             {
                 conn.Open();
                 return conn.Query<GetProductListCommandResult>(query);

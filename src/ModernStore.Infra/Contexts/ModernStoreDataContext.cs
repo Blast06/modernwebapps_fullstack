@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ModernStore.Domain.Entities;
-using ModernStore.Shared.Entities;
 
 namespace ModernStore.Infra.Contexts
 {
@@ -24,7 +23,7 @@ namespace ModernStore.Infra.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(Settings.ConnectionString);
+            //optionsBuilder.UseSqlServer(Settings.ConnectionString);
         }
 
         public DbSet<User> User { get; set; }

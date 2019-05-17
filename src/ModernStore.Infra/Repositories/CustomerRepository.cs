@@ -8,6 +8,7 @@ using ModernStore.Domain.Commands.Results;
 using ModernStore.Domain.Entities;
 using ModernStore.Domain.Repositories;
 using ModernStore.Infra.Contexts;
+using ModernStore.Shared;
 using static Dapper.SqlMapper;
 
 namespace ModernStore.Infra.Repositories
@@ -72,7 +73,7 @@ namespace ModernStore.Infra.Repositories
             //    .FirstOrDefault(x => x.Username == username);
 
             var query = "SELECT * FROM [GetCustomerInfoView] WHERE [Active]=1 AND [Username]=@username";
-            using (var conn = new SqlConnection(Settings.ConnectionString))
+            using (var conn = new SqlConnection(Runtime.ConnectionString))
             {
                 conn.Open();
                 return conn
