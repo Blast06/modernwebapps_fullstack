@@ -20,7 +20,6 @@ namespace ModernStore.Infra.Contexts
         #region Constructors DbSets
         public ModernStoreDataContext(DbContextOptions<ModernStoreDataContext> options) : base(options) { }
         public ModernStoreDataContext() { }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqlServer(Settings.ConnectionString);
@@ -100,7 +99,7 @@ namespace ModernStore.Infra.Contexts
                 etd.ToTable("Product");
                 etd.HasKey(c => c.ProductId);
                 etd.Property(c => c.Image).IsRequired().HasMaxLength(1024);
-                etd.Property(c => c.Price).IsRequired();
+                etd.Property(c => c.Price).IsRequired().HasColumnType("decimal(18,2)");
                 etd.Property(c => c.QuantityOnHand).IsRequired();
                 etd.Property(c => c.Title).IsRequired().HasMaxLength(160);
                 etd.Property(c => c.CreatedBy).IsRequired();
@@ -117,8 +116,8 @@ namespace ModernStore.Infra.Contexts
             {
                 etd.ToTable("Order");
                 etd.HasKey(c => c.OrderId);                
-                etd.Property(c => c.DeliveryFee).IsRequired();
-                etd.Property(c => c.Discount).IsRequired();
+                etd.Property(c => c.DeliveryFee).IsRequired().HasColumnType("decimal(18,2)");
+                etd.Property(c => c.Discount).IsRequired().HasColumnType("decimal(18,2)");
                 etd.Property(c => c.Number).IsRequired().HasMaxLength(8);
                 etd.Property(c => c.Status).IsRequired();
                 etd.Property(c => c.CreatedBy).IsRequired();
@@ -139,7 +138,7 @@ namespace ModernStore.Infra.Contexts
             {
                 etd.ToTable("OrderItem");
                 etd.HasKey(c => c.OrderItemId);
-                etd.Property(c => c.Price).IsRequired();
+                etd.Property(c => c.Price).IsRequired().HasColumnType("decimal(18,2)");
                 etd.Property(c => c.Quantity).IsRequired();
                 etd.Property(c => c.CreatedBy).IsRequired();
                 etd.Property(c => c.UpdatedBy).IsRequired();

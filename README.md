@@ -1,18 +1,18 @@
-# Modern Web Apps - Full Stack (Based on Balta Course 22h):
 Modern WebApp FullStack - .NET Core Backend + Angular UI Web + Ionic Mobile APP. 
+**Note**: This is developed/tested using .NET Core Runtime 2.2.4 / SDK 2.2.106 .
 
-This is a Customer + Products + Sales APP. To run you will need:
-(1) Install .NET Core Runtime (2.2.4) + .Net Core SDK 2.2.106 (Last for VS2017).
-(2) Open Project and Restore NugetPackages. After - Rebuild all Solution.
-(3) Set "ModernStore.Infra.Console" as StartUp Project. Open Package-Manager Console.
-(4) Select Default-Project as "ModernStore.Infra", enter it's folder (cd) and run "update-database".
-That's all folks!
+How to RUN this APP:<br />
+(1) Right-Click on Solution and then "Restore Nuget Packages". Then "Rebuild Solution".<br />
+(2) Check your SQL Server connection string at "ModernStore.Api > appsettings.json".<br />
+(3) Set "ModernStore.Api" as Startup, open Package-Manager Console and select ModernStore.Api:<br />
+(4) update-database (this will create the database based on migration)<br />
+(5) Run the Api. Swagger will be available for Tests: /swagger<br />
 
+On the "doc" folder there's some prints of the Tests made on PostMan!
 ------------------------------------------------------------------------------------------------------------
-Note 30/04/2019 - This is UnderDev - not ready! Check out "PassaiaStoreClassic" repo instead.
 
-Requisites: VS Community + VS Code + NodeJS (npm)
-Yeoman (npm install -g yo + npm install -g generator-aspnet)
+Note 30/04/2019 - This is UnderDev - not ready! Check out "SampleStudies>Company Tests" repo instead. Over
+There you can check .Net Core Project (FutureMedia) or Classic Framework Project (Natfic).
 
 ------------------------------------------------------------------------------------------------------------
 Note: Document of Customer is a "CPF" - the Brazilian Registration Card. It requires a Validation method to

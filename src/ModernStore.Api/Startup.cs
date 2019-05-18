@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using ModernStore.Api.Security;
 using ModernStore.Domain.Commands.Handlers;
@@ -108,7 +108,13 @@ namespace ModernStore.Api
 
             ////i had to add this line, because MVC is converting my DTOs to Lowercase, so instead of "UserName" it's taking "userName" (even if class is UserName).
             services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
+
+            //options.UseSqlServer(connection, b => b.MigrationsAssembly("ModernStore.Api"))
             
+            services.AddDbContext<ModernStoreDataContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));            
+
             //method to SWAGGER (OpenApi) works:
             services.AddSwaggerGen(x =>
             {
@@ -136,7 +142,8 @@ namespace ModernStore.Api
 
                 RequireExpirationTime = true,
                 ValidateLifetime = true,
-
+                
+                //if i don't declare it, i will have UTC problems if Server is in a different place than User
                 ClockSkew = TimeSpan.Zero
             };
 
@@ -146,11 +153,9 @@ namespace ModernStore.Api
                 x.AllowAnyMethod();
                 x.AllowAnyOrigin();
             });
-            app.UseMvc();
+            app.UseMvc();            
 
-            Runtime.ConnectionString = Configuration.GetConnectionString("CnnStr");
-
-            app.UseStaticFiles();
+            app.UseStaticFiles();            
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
