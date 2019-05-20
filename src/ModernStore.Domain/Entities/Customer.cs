@@ -1,8 +1,6 @@
-﻿using ModernStore.Domain.Entities;
-using ModernStore.Domain.ValueObjects;
+﻿using ModernStore.Domain.ValueObjects;
 using ModernStore.Shared.Entities;
 using System;
-using System.Collections.Generic;
 
 namespace ModernStore.Domain.Entities
 {
