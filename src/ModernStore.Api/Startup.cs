@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -113,7 +114,42 @@ namespace ModernStore.Api
             //options.UseSqlServer(connection, b => b.MigrationsAssembly("ModernStore.Api"))
             
             services.AddDbContext<ModernStoreDataContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));            
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            //var tokenValidationParameters = new TokenValidationParameters
+            //{
+            //    ValidateIssuer = true,
+            //    ValidIssuer = ISSUER,
+
+            //    ValidateAudience = true,
+            //    ValidAudience = AUDIENCE,
+
+            //    ValidateIssuerSigningKey = true,
+            //    IssuerSigningKey = _signingKey,
+
+            //    RequireExpirationTime = true,
+            //    ValidateLifetime = true,
+
+            //    //if i don't declare it, i will have UTC problems if Server is in a different place than User
+            //    ClockSkew = TimeSpan.Zero
+            //};
+
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddJwtBearer(options =>
+            //    {
+            //        options.Audience = "http://localhost:5001/";
+            //        options.Authority = "http://localhost:5000/";
+            //        options.TokenValidationParameters = tokenValidationParameters;
+            //    });
+
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Audience = "http://localhost:5001/";
+                options.Authority = "http://localhost:5000/";
+            });
+
 
             //method to SWAGGER (OpenApi) works:
             services.AddSwaggerGen(x =>
@@ -128,24 +164,15 @@ namespace ModernStore.Api
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+                        
 
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = ISSUER,
-
-                ValidateAudience = true,
-                ValidAudience = AUDIENCE,
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = _signingKey,
-
-                RequireExpirationTime = true,
-                ValidateLifetime = true,
-                
-                //if i don't declare it, i will have UTC problems if Server is in a different place than User
-                ClockSkew = TimeSpan.Zero
-            };
+            //This Method is OBSOLETE in .Net Core 2.2 so i had to change to AddAuthentication
+            //app.UseJwtBearerAuthentication( (new JwtBearerOptions
+            //{
+            //    AutomaticAuthenticate = true,
+            //    AutomaticChallenge = true,
+            //    TokenValidationParameters = tokenValidationParameters
+            //});
 
             app.UseCors(x =>
             {
@@ -153,15 +180,20 @@ namespace ModernStore.Api
                 x.AllowAnyMethod();
                 x.AllowAnyOrigin();
             });
-            app.UseMvc();            
-
-            app.UseStaticFiles();            
-
+                        
+            app.UseMvc();
+            app.UseStaticFiles();
             app.UseSwagger();
+            app.UseAuthentication();
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "FutureOfMedia - V1");
             });
+
+            //WOW, when i do it here, my runtime connection string will be available everywhere
+            //Including in Repo Project (in my Dapper Get Methods - that's brilliant!).
+            Runtime.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
         }
     }
 }

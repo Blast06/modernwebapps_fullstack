@@ -47,11 +47,12 @@ namespace ModernStore.Api.Controllers
         {
             if (command == null)
                 return await Response(null, new List<Notification> { new Notification("User", "Usuário ou senha inválidos")});
-
-            var identity = await GetClaims(command);
+            
+            var identity = await GetClaims(command); //this method goes to my DB and check if user exists
             if (identity == null)
                 return await Response(null, new List<Notification> { new Notification("User", "Usuário ou senha inválidos") });
 
+            //here i generate the claims
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.UniqueName, command.Username),
@@ -63,6 +64,7 @@ namespace ModernStore.Api.Controllers
                 identity.FindFirst("ModernStore")
             };
 
+            //here i generate the token
             var jwt = new JwtSecurityToken(
                 issuer: _tokenOptions.Issuer,
                 audience: _tokenOptions.Audience,
@@ -71,8 +73,10 @@ namespace ModernStore.Api.Controllers
                 expires: _tokenOptions.Expiration,
                 signingCredentials: _tokenOptions.SigningCredentials);
 
+            //here i codify the WebToken
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
+            //generate the response
             var response = new
             {
                 token = encodedJwt,
@@ -86,6 +90,7 @@ namespace ModernStore.Api.Controllers
                 }
             };
 
+            //codify the response
             var json = JsonConvert.SerializeObject(response, _serializerSettings);
             return new OkObjectResult(json);
         }
@@ -114,11 +119,13 @@ namespace ModernStore.Api.Controllers
             if (customer == null)
                 return Task.FromResult<ClaimsIdentity>(null);
 
+            //call the method to Autenticate the user (inside customer class)
             if (!customer.User.Authenticate(command.Username, command.Password))
                 return Task.FromResult<ClaimsIdentity>(null);
 
             _customer = customer;
 
+            //here i generate the ClaiIdentity (take a look on Startup.cs for this "profile" ModernStore > User
             return Task.FromResult(new ClaimsIdentity(
                 new GenericIdentity(customer.User.Username, "Token"),
                 new[] {
