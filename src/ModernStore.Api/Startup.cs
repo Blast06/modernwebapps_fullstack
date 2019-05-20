@@ -66,27 +66,14 @@ namespace ModernStore.Api
                 options.AddPolicy("Admin", policy => policy.RequireClaim("ModernStore", "Admin"));
             });
 
+
+
             services.Configure<TokenOptions>(options =>
             {
                 options.Issuer = ISSUER;
                 options.Audience = AUDIENCE;
                 options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
             });
-
-
-            //This Solves the Legacy Code commented on Configure Method
-            //services.AddAuthorization(options =>
-            //{
-            //    options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-            //        .RequireAuthenticatedUser()
-            //        .Build();
-            //}
-            //);
-            //services.AddAuthentication(o =>
-            //{
-            //    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //});
 
             //difference between Scoped and Transient is that: when you start app (server), will be created just ONE instance
             //of "ModernStoreDataContext". The SAME instance will be passed always when someone asks for ModernStoreDataContext.
@@ -106,68 +93,42 @@ namespace ModernStore.Api
 
             //i had to ADD this Line because PostMan and AspNet Core are not in a mood...
             services.AddMvc().AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
             ////i had to add this line, because MVC is converting my DTOs to Lowercase, so instead of "UserName" it's taking "userName" (even if class is UserName).
             services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
-
-            //options.UseSqlServer(connection, b => b.MigrationsAssembly("ModernStore.Api"))
-            
             services.AddDbContext<ModernStoreDataContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            //var tokenValidationParameters = new TokenValidationParameters
-            //{
-            //    ValidateIssuer = true,
-            //    ValidIssuer = ISSUER,
-
-            //    ValidateAudience = true,
-            //    ValidAudience = AUDIENCE,
-
-            //    ValidateIssuerSigningKey = true,
-            //    IssuerSigningKey = _signingKey,
-
-            //    RequireExpirationTime = true,
-            //    ValidateLifetime = true,
-
-            //    //if i don't declare it, i will have UTC problems if Server is in a different place than User
-            //    ClockSkew = TimeSpan.Zero
-            //};
-
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(options =>
-            //    {
-            //        options.Audience = "http://localhost:5001/";
-            //        options.Authority = "http://localhost:5000/";
-            //        options.TokenValidationParameters = tokenValidationParameters;
-            //    });
-
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.Audience = "http://localhost:5001/";
-                options.Authority = "http://localhost:5000/";
-            });
-
-
-            //method to SWAGGER (OpenApi) works:
             services.AddSwaggerGen(x =>
             {
+                //method to SWAGGER (OpenApi) works:
                 x.SwaggerDoc("v1", new Info { Title = "ModernStore API", Version = "v1" });
             });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            //loggerFactory.AddConsole();
-
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-                        
 
-            //This Method is OBSOLETE in .Net Core 2.2 so i had to change to AddAuthentication
-            //app.UseJwtBearerAuthentication( (new JwtBearerOptions
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = ISSUER,
+
+                ValidateAudience = true,
+                ValidAudience = AUDIENCE,
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = _signingKey,
+
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+
+                ClockSkew = TimeSpan.Zero
+            };
+
+            //app.UseJwtBearerAuthentication(new JwtBearerOptions
             //{
             //    AutomaticAuthenticate = true,
             //    AutomaticChallenge = true,
@@ -180,16 +141,14 @@ namespace ModernStore.Api
                 x.AllowAnyMethod();
                 x.AllowAnyOrigin();
             });
-                        
-            app.UseMvc();
-            app.UseStaticFiles();
-            app.UseSwagger();
-            app.UseAuthentication();
 
+            app.UseMvc();
+            app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "FutureOfMedia - V1");
             });
+            //app.UseAuthentication();
 
             //WOW, when i do it here, my runtime connection string will be available everywhere
             //Including in Repo Project (in my Dapper Get Methods - that's brilliant!).
