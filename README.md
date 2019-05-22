@@ -47,3 +47,22 @@ There's to way of autenticate: (1) Roles (2) Policy and Claim.
 To install: Microsoft.AspNetCore.Authentication.JwtBearer
 (Note: If you want to build a Distributated-API and this API will generate auth to a lot of Systems, you can
 use something like Think Tank Identity Server).
+
+Note: I've updated my Code to .NET Core 2.2 (is different) but it's already there.
+
+------------------------------------------------------------------------------------------------------------
+
+FRONT END Part:
+
+Angular Commands:
+
+ng new testeApp (create the app)
+ng generate component Teste (create a component)
+ng generate service Teste (creates a service)
+ng generate directive Teste (create a directive)
+ng serve (run the app and rebuild when change something)
+ng build (compile a "DIST" directory and leaves ready for deploy - to send to server)
+ng test (run tests and open karma IDE)
+
+Order:
+ng generate component Headbar
